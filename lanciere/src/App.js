@@ -1,13 +1,10 @@
 import React, { useState, useCallback, useMemo, useRef, useEffect } from "react";
-// Import FaPlus for the "add note" button
 import { FaPlus } from 'react-icons/fa';
-
-// Corrected import paths to point to the 'components' subdirectory
 import TaskForm from "./components/taskform";
 import TaskList from "./components/tasklist";
 import Filters from "./components/filters";
 import { TaskProvider, useTasks } from "./components/taskcontext";
-import './components/App.css'; // This path is used as per your provided file
+import './components/App.css';
 
 function AppContent() {
   const { tasks, loading, error } = useTasks();
@@ -15,61 +12,44 @@ function AppContent() {
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [filterCriteria, setFilterCriteria] = useState({ search: '', priority: 'All', status: 'All' });
 
-  // --- START: Toast Timer and Progress Bar Functionality ---
-  // useRef to store the timeout ID
   const timerRef = useRef(null);
-  // useRef for the progress bar DOM element
   const progressBarRef = useRef(null);
 
-  // Function to start the dismiss timer and progress bar animation
   const startDismissTimer = useCallback(() => {
-    // Clear any existing timer first
     if (timerRef.current) {
       clearTimeout(timerRef.current);
     }
-    // Set a new timer
     timerRef.current = setTimeout(() => {
-      setSummaryToast(null); // Dismiss the toast
-      timerRef.current = null; // Clear ref after timer completes
-    }, 5000); // 5 seconds
+      setSummaryToast(null);
+      timerRef.current = null;
+    }, 5000);
 
-    // Logic to start/resume progress bar animation
     if (progressBarRef.current) {
-      // Reset animation to ensure it restarts from the beginning if toast is new
       progressBarRef.current.style.animation = 'none';
-      // Force reflow to apply 'none' before restarting
       void progressBarRef.current.offsetWidth;
-      // Apply the animation
       progressBarRef.current.style.animation = 'progressBarShrink 5s linear forwards';
-      progressBarRef.current.style.animationPlayState = 'running'; // Ensure it's running
+      progressBarRef.current.style.animationPlayState = 'running';
     }
+  }, []);
 
-  }, []); // Corrected: REMOVED 'summaryToast' from dependencies
-
-  // Function to clear the dismiss timer and pause progress bar animation (on hover in)
   const clearDismissTimer = useCallback(() => {
     if (timerRef.current) {
       clearTimeout(timerRef.current);
-      timerRef.current = null; // Clear ref as timer is stopped
+      timerRef.current = null;
     }
-    // Pause progress bar animation
     if (progressBarRef.current) {
       progressBarRef.current.style.animationPlayState = 'paused';
     }
-  }, []); // No dependencies, function is stable
+  }, []);
 
-  // Effect to manage the timer when toast appears/disappears
   useEffect(() => {
-    if (summaryToast) { // If a toast is currently active, start its timer
+    if (summaryToast) {
       startDismissTimer();
-    } else { // If toast is null, ensure any lingering timer is cleared
-      clearDismissTimer(); // Ensure any old timer is stopped
+    } else {
+      clearDismissTimer();
     }
-    // Cleanup function: clears the timer if component unmounts or toast goes away
     return () => clearDismissTimer();
-  }, [summaryToast, startDismissTimer, clearDismissTimer]); // Re-run when summaryToast changes or timer functions change (stable)
-  // --- END: Toast Timer and Progress Bar Functionality ---
-
+  }, [summaryToast, startDismissTimer, clearDismissTimer]);
 
   const handleFilter = useCallback(({ search, priority, status }) => {
     setFilterCriteria({ search, priority, status });
@@ -99,35 +79,47 @@ function AppContent() {
 
   const handleSummarizeAndSend = useCallback(async () => {
     setIsSummarizing(true);
-    setSummaryToast(null); // Clear any existing toast/message before new action
-    clearDismissTimer(); // Ensure any old timer is stopped immediately before a new request
+    setSummaryToast(null);
+    clearDismissTimer();
 
     try {
-      const response = await fetch('https://leucine-y0ug.onrender.com/api/todos', {
+      const tasksToSummarize = tasks.map(task => ({
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        dueDate: task.dueDate,
+        priority: task.priority,
+        status: task.status,
+        completed: task.completed
+      }));
+
+      const SUMMARIZE_API_URL = 'https://leucine-y0ug.onrender.com/api/summarize';
+
+      const response = await fetch(SUMMARIZE_API_URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ todos: tasksToSummarize }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to summarize and send to Slack.');
+        throw new Error(data.message || `HTTP error! status: ${response.status} - Failed to summarize.`);
       }
 
-      // Set the summary content to be displayed in the toast
-      setSummaryToast({ type: 'success', text: data.summary });
+      setSummaryToast({ type: 'success', text: data.summary || 'Summary generated successfully!' });
       console.log('Summary sent to Slack. Backend response:', data);
 
     } catch (err) {
       console.error("Error summarizing and sending to Slack:", err);
-      // Set an error message for the toast
       setSummaryToast({ type: 'error', text: err.message || 'An unexpected error occurred while sending to Slack.' });
     } finally {
       setIsSummarizing(false);
     }
-  }, [clearDismissTimer]); // No change here, still only clearDismissTimer
+  }, [tasks, clearDismissTimer]);
+
 
   return (
     <div className="App">
@@ -135,16 +127,13 @@ function AppContent() {
         <h1>Todo Summary Assistant</h1>
       </header>
       <main>
-        {/* Filters and TaskForm remain above the main task content as before */}
         <Filters onFilter={handleFilter} />
         <TaskForm />
 
-        {/* New container for the Sticky Wall (button + task grid) */}
         <div className="sticky-wall-container">
-          {/* Summarize button positioned at the top right within this container */}
           <button
             onClick={handleSummarizeAndSend}
-            disabled={isSummarizing || loading}
+            disabled={isSummarizing || loading || tasks.length === 0}
             className="summarize-button"
           >
             {isSummarizing ? "Summarizing..." : "Summarize & Send to Slack"}
@@ -153,19 +142,15 @@ function AppContent() {
           {loading && <p>Loading tasks...</p>}
           {error && <p style={{ color: 'red' }}>Error: {error}</p>}
 
-          {/* TaskList (the grid of sticky notes) */}
           {!loading && !error && (
             <TaskList tasks={filteredTasks}>
-              {/* The plus sign placeholder for adding new notes */}
-              {/* IMPORTANT: TaskList.js MUST render its 'children' prop for this to show up */}
               <div className="task-card add-note-button">
                 <FaPlus />
               </div>
             </TaskList>
           )}
-        </div> {/* End sticky-wall-container */}
+        </div>
 
-        {/* Summary Toast Notification - position fixed (outside main flow) */}
         {summaryToast && (
           <div
             className={`summary-toast summary-toast-${summaryToast.type}`}
@@ -176,7 +161,6 @@ function AppContent() {
               <>
                 <p>Summary sent to Slack. Here's what was sent:</p>
                 <pre className="summary-toast-text">{summaryToast.text}</pre>
-                {/* Progress bar div - THIS IS THE BAR TO SHOW THE TIMER */}
                 <div className="summary-progress-bar-container">
                   <div ref={progressBarRef} className="summary-progress-bar"></div>
                 </div>
