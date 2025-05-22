@@ -103,7 +103,7 @@ function AppContent() {
     clearDismissTimer(); // Ensure any old timer is stopped immediately before a new request
 
     try {
-      const response = await fetch('http://localhost:8080/api/summarize', {
+      const response = await fetch('https://leucine-y0ug.onrender.com/api/todos', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
