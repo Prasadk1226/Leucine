@@ -7,8 +7,19 @@ const supabase = require('./db');
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-app.use(cors());
+// Configure CORS
+const corsOptions = {
+    origin: 'https://leucine-todo.vercel.app', // Your frontend's domain
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed methods
+    credentials: true, // Allow cookies to be sent
+    optionsSuccessStatus: 204 // Some legacy browsers (IE11, various SmartTVs) choke on 200
+};
+app.use(cors(corsOptions)); // Apply CORS with options
+
 app.use(express.json());
+
+// app.use(cors());
+// app.use(express.json());
 
 app.get('/', (req, res) => {
     res.send('Todo Summary Assistant Backend is running!');
