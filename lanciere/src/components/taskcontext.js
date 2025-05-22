@@ -7,7 +7,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 const TaskContext = createContext();
 
 // Base URL for your backend API
-const API_BASE_URL = 'http://localhost:8080/api/todos';
+const API_BASE_URL = 'https://leucine-y0ug.onrender.com/api/todos';
 
 export const TaskProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
