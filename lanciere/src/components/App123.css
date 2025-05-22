@@ -1,0 +1,235 @@
+/* Global Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 2rem;
+  background-color: #f2f2f2;
+}
+.task-form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* Task Form Styles */
+.task-form input,
+.task-form select,
+.task-form button {
+  display: block;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 400px;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.task-form input:focus,
+.task-form select:focus,
+.task-form button:focus {
+  outline: none;
+  border-color: #3f51b5; /* Focus border color */
+}
+
+/* Task Card Styles */
+.task-card {
+  background: white;
+  border: 1px solid #ccc;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 5px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.task-card:hover {
+  transform: scale(1.05); /* Slight scale on hover */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Task Priority Colors */
+.task-card.low {
+  border-left: 5px solid #76c7c0; /* Soft Green */
+}
+
+.task-card.medium {
+  border-left: 5px solid #ffc107; /* Amber/Yellow */
+}
+
+.task-card.high {
+  border-left: 5px solid #f44336; /* Red */
+}
+
+/* Completed Task Styling */
+.task-card.completed {
+  background: #d4ffd4; /* Light Green */
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Hover Effect for Buttons */
+button {
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #303f9f; /* Darker blue on hover */
+}
+
+/* Transition Effect for Task Updates */
+.task-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Smooth Fade-in Animation for Task Cards */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.task-card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Default styling for dropdowns */
+.task-form select {
+  padding: 6px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-weight: bold;
+}
+
+/* Priority Colors */
+.priority-low {
+  background-color: #e0f7fa; /* light blue */
+  color: #00796b;
+}
+
+.priority-medium {
+  background-color: #fff3e0; /* light orange */
+  color: #ef6c00;
+}
+
+.priority-high {
+  background-color: #ffebee; /* light red */
+  color: #c62828;
+}
+
+/* Filters Container */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem 0;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Filters Inputs */
+.filters input,
+.filters select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+  min-width: 180px;
+}
+
+.filters input:focus,
+.filters select:focus {
+  border-color: #3f51b5;
+  outline: none;
+}
+
+/* Filter Button */
+.filters button {
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.filters button:hover {
+  background-color: #303f9f;
+}
+
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.modal-content button {
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+}
+
+.modal-content button:hover {
+  background-color: #303f9f;
+}
+
+.modal-content button:last-child {
+  background-color: #f44336;
+}
+
+.modal-content button:last-child:hover {
+  background-color: #d32f2f;
+}

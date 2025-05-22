@@ -1,0 +1,635 @@
+/* Global Styles */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 2rem; /* Keep existing padding */
+  background-color: #fafafa;
+  color: #333;
+}
+
+/* Ensure the main content area centers and has space */
+.App main {
+  max-width: 1200px; /* Or a suitable max-width for your content */
+  margin: 0 auto; /* Center the main content */
+  padding: 1rem 0; /* Add some vertical padding */
+}
+
+/* Task Form Styles */
+.task-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  max-width: 80vw; /* Keep this max-width */
+}
+
+.task-form input,
+.task-form select,
+.task-form button {
+  display: block;
+  margin: 0.5rem 0;
+  padding: 0.75rem;
+  width: 99%;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease-in-out;
+}
+.task-form input{
+  width: 93%;
+}
+.task-form input:focus,
+.task-form select:focus {
+  outline: none;
+  border-color: #999;
+}
+
+/* Buttons styled with orange - GENERAL BUTTON STYLES (for forms, filters, modals) */
+.task-form button,
+.filters button,
+.modal-content button {
+  background-color: #ff6600;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem; /* Keep these buttons at 1rem font size */
+  padding: 0.75rem 1.25rem; /* Keep these buttons' padding */
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+  font-weight: 600; /* Keep consistent font-weight */
+}
+
+.modal-content button.close-btn{
+  margin-left: 90%;
+  position: relative;
+  top: -50px;
+  z-index: 9999;
+}
+
+.task-form button:hover,
+.filters button:hover,
+.modal-content button:hover {
+  background-color: #e65c00;
+  transform: scale(1.02); /* Keep existing scale */
+}
+
+/* Disabled button state (now for all these buttons) */
+.summarize-button:disabled, /* Apply to summarize button */
+.task-form button:disabled,
+.filters button:disabled,
+.modal-content button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: scale(1);
+  opacity: 0.7;
+}
+
+/* Task Card Styles - NOW A GRID AND STICKY NOTE LOOK */
+.task-list {
+  display: grid; /* Use CSS Grid for the sticky notes */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Flexible grid columns */
+  gap: 20px; /* Gap between notes */
+  padding: 20px 0; /* Padding around the grid */
+  justify-content: center; /* Center items in the grid */
+  align-items: flex-start; /* Align notes to the top of their cells */
+  margin: 0 auto; /* Center the grid itself */
+  max-width: 100%; /* Adjust based on your main content width */
+}
+
+.task-card {
+  background: white;
+  border: 1px solid #ddd;
+  margin: 0; /* Reset margin from previous block */
+  padding: 1rem;
+  border-radius: 8px; /* Keep existing radius, or adjust for more sticky note feel */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  transition: box-shadow 0.3s ease, transform 0.2s ease; /* Add transform for hover */
+  min-height: 150px; /* Minimum height for a sticky note */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Push buttons to bottom */
+  position: relative; /* For badges or other positioned elements */
+}
+
+.task-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transform: translateY(-5px); /* Slight lift on hover */
+}
+
+#buttonCon {
+  display: flex;
+  gap: 4px;
+  margin-top: auto; /* Pushes buttons to the bottom */
+  flex-wrap: wrap; /* Allow buttons to wrap */
+}
+
+/* --- UPDATED: STYLES FOR BUTTONS INSIDE TASK CARDS --- */
+.task-card button {
+  background-color: #ff7700; /* Use orange to match other buttons */
+  color: white;
+  border: none;
+  border-radius: 6px; /* Match form buttons */
+  padding: 0.75rem 1rem; /* Increased padding */
+  font-size: 0.95rem; /* Increased font size, slightly smaller than form buttons */
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  flex-grow: 1; /* Allow buttons to grow and fill space */
+  min-width: 80px; /* Ensure a slightly larger minimum width */
+}
+
+.task-card button:hover {
+  background-color: #e65c00; /* Darker orange on hover */
+  transform: translateY(-2px); /* Slightly more prominent lift */
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.task-card button:active {
+  transform: translateY(0); /* Press effect */
+  box-shadow: none;
+}
+/* Specific button styles for task cards if needed (e.g., delete button red) */
+.task-card button.delete-btn {
+  background-color: #dc3545; /* Keep Red for delete */
+}
+
+.task-card button.delete-btn:hover {
+  background-color: #c82333;
+}
+/* --- END: STYLES FOR BUTTONS INSIDE TASK CARDS --- */
+
+
+/* Task Priority Colors - subtle background */
+.task-card.low {
+  border-left: 5px solid #a3d2ca;
+  background-color: #e6f9f8; /* Lightest blue-green */
+}
+
+.task-card.medium {
+  border-left: 5px solid #f4a261;
+  background-color: #fff5e0; /* Lightest orange-yellow */
+}
+
+.task-card.high {
+  border-left: 5px solid #e76f51;
+  background-color: #ffe4e1; /* Lightest red-orange */
+}
+
+/* Completed Task Styling */
+.task-card.completed {
+  background: #e0e0e0;
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+/* Transition Effect for Task Updates */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.task-card {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* Default styling for dropdowns */
+.task-form select {
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-weight: 600;
+  width: 95%;
+}
+
+/* Priority Colors (for select elements) */
+.priority-low {
+  background-color: #d0f0f0 !important;
+  color: #317873 !important;
+}
+
+.priority-medium {
+  background-color: #fff0db !important;
+  color: #b35c00 !important;
+}
+
+.priority-high {
+  background-color: #ffe3dc;
+  color: #a63e2a;
+}
+
+
+/* Status styles (for select elements) */
+.task-form select.status-todo {
+  background-color: #e1f5fe !important;
+  color: #0277bd !important;
+  border: 1px solid #81d4fa;
+}
+
+.task-form select.status-inprogress {
+  background-color: #fff9c4 !important;
+  color: #f57f17 !important;
+  border: 1px solid #ffe082;
+}
+
+.task-form select.status-completed {
+  background-color: #e8f5e9 !important;
+  color: #2e7d32 !important;
+  border: 1px solid #a5d6a7;
+}
+
+
+/* Filters Container */
+.filters { /* Keep .filters as per your App.js */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1rem auto; /* Centered with auto margin */
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: #fff;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  max-width: 80vw; /* Keep this max-width */
+}
+.task-form button{
+  width: 95%;
+}
+
+/* Filters Inputs */
+.filters input,
+.filters select {
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+  min-width: 180px;
+}
+
+.filters input:focus,
+.filters select:focus {
+  border-color: #999;
+  outline: none;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.modal-content input,
+.modal-content textarea,
+.modal-content select {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+.modal-content input, .modal-content textarea{
+  width: 94%;
+}
+.form1{
+  margin-top: -40px;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+  }
+
+  .task-form {
+    padding: 1rem 0.5rem;
+    max-width: 100%;
+  }
+
+  .task-form input,
+  .task-form select,
+  .task-form button {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+    width: 90%;
+  }
+
+  .task-form input{
+    width: 85%;
+  }
+
+  .task-card {
+    width: 90%;
+  }
+  .task-list {
+    gap: 1rem;
+    grid-template-columns: 1fr; /* Stack tasks vertically on small screens */
+  }
+
+  .filters {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .filters input,
+  .filters select {
+    min-width: 95%;
+  }
+  .filters input{
+    min-width: 90%;
+  }
+
+  .modal-content {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .modal-content input,
+  .modal-content textarea,
+  .modal-content select {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+
+  /* Adjust button styles specifically for modal content on small screens */
+  .modal-content button {
+    font-size: 0.9rem;
+    padding: 0.6rem 1rem;
+  }
+
+  /* Responsive for summarize button inside sticky-wall-container */
+  .sticky-wall-container .summarize-button {
+    position: static; /* Override absolute position on small screens */
+    margin: 10px auto; /* Center it */
+    width: 90%; /* Make button full width */
+    font-size: 1rem; /* Match other buttons' font size */
+    padding: 0.75rem 1.25rem; /* Match other buttons' padding */
+  }
+
+  /* Responsive for task card buttons on small screens */
+  .task-card button {
+    font-size: 0.9rem; /* Slightly reduce font size for card buttons on small screens */
+    padding: 0.6rem 0.8rem; /* Adjust padding */
+    min-width: 60px; /* Adjust min-width */
+  }
+}
+
+/* ===== Enhanced TaskForm UI Styling (from previous update, keeping what makes sense) ===== */
+.task-form {
+  max-width: 80vw;
+  background: linear-gradient(to bottom right, #ffffff, #fef6f1); /* Keep gradient */
+  border: 1px solid #ffefe3;
+  padding: 2rem 1.5rem;
+  border-radius: 16px; /* Larger radius for form */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.task-form h2 {
+  font-size: 1.8rem;
+  color: #ff6200;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.task-form input,
+.task-form select {
+  border-radius: 12px; /* Larger radius for inputs */
+  border: 1px solid #ddd;
+  background-color: #fff;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1rem;
+  transition: all 0.2s ease;
+}
+
+.task-form input:focus,
+.task-form select:focus {
+  border-color: #ff6200;
+  box-shadow: 0 0 0 3px rgba(255, 98, 0, 0.2);
+}
+
+.task-form select.priority-high {
+  background-color: #ffe4e1;
+}
+
+.task-form select.priority-medium {
+  background-color: #fff5e0;
+}
+
+.task-form select.priority-low {
+  background-color: #e6f9f8;
+}
+
+.task-form button {
+  font-weight: 600;
+  background: linear-gradient(135deg, #ff6200, #ff854d); /* Keep gradient button */
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(255, 98, 0, 0.2);
+  border-radius: 12px; /* Apply larger radius to button as well */
+}
+
+.task-form button:hover {
+  background: linear-gradient(135deg, #e75e00, #ff6f1f);
+  transform: scale(1.02);
+}
+
+/* Optional spacing between form fields */
+.task-form input,
+.task-form select,
+.task-form button {
+  margin-top: 0.5rem;
+}
+
+
+/* --- NEW STYLES FOR STICKY WALL CONTAINER --- */
+.sticky-wall-container {
+  position: relative; /* Essential for absolute positioning of the button */
+  margin: 2rem auto; /* Center the whole container */
+  padding: 20px; /* Padding inside the container, around the grid */
+  background-color: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  max-width: 80vw; /* Match max-width with TaskForm and Filters */
+}
+
+.sticky-wall-container .summarize-button {
+  position: absolute; /* Position the button */
+  top: 20px; /* Distance from top */
+  right: 20px; /* Distance from right */
+  z-index: 10; /* Ensure button is above tasks if they overlap */
+  padding: 0.75rem 1.25rem; /* Adjusted padding for button */
+  font-size: 1rem; /* Increased font size to match form buttons */
+  border-radius: 8px; /* Slightly smaller border-radius for cleaner look */
+  background: linear-gradient(135deg, #ff6200, #ff854d);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 8px rgba(255, 98, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.sticky-wall-container .summarize-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #e75e00, #ff6f1f);
+  transform: scale(1.05); /* Slightly more prominent hover */
+}
+
+.sticky-wall-container .summarize-button:disabled {
+  background: #cccccc;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: scale(1);
+  opacity: 0.7;
+}
+
+/* Adjust TaskList margin when inside sticky-wall-container to account for button */
+.sticky-wall-container .task-list {
+  margin-top: 50px; /* Make space for the absolute-positioned button */
+  /* Ensure TaskList still has its grid properties as defined above */
+}
+
+
+/* --- New styles for the summary toast notification (with responsiveness and progress bar) --- */
+
+.summary-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: calc(100% - 40px);
+  max-width: 350px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-sizing: border-box;
+}
+
+.summary-toast-success {
+  border-left: 5px solid #4CAF50;
+  background-color: #e8f5e9;
+}
+
+.summary-toast-error {
+  border-left: 5px solid #f44336;
+  background-color: #ffebee;
+}
+
+.summary-toast p {
+  margin: 0;
+  font-size: 0.9em;
+  color: #333;
+}
+
+.summary-toast pre {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.85em;
+  max-height: 150px;
+  overflow-y: auto;
+  color: #222;
+}
+
+/* --- Progress Bar Styles --- */
+.summary-progress-bar-container {
+  width: 100%;
+  height: 5px; /* Height of the bar */
+  background-color: #e0e0e0; /* Background of the track */
+  border-radius: 5px;
+  overflow: hidden; /* Hide overflowing part of the bar */
+  margin-top: 10px; /* Space above the bar */
+}
+
+.summary-progress-bar {
+  height: 100%;
+  width: 100%; /* Start at 100% width and shrink */
+  background-color: #04aa2b; /* Blue fill color */
+  border-radius: 5px;
+  transform-origin: left; /* Animation starts from the left */
+  /* animation: progressBarShrink 5s linear forwards; */ /* Animation applied via JavaScript */
+}
+
+/* Keyframe animation for the progress bar */
+@keyframes progressBarShrink {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+
+/* --- Media Queries for toast responsiveness --- */
+
+@media (max-width: 600px) {
+  .summary-toast {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    padding: 10px;
+  }
+
+  .summary-toast p {
+    font-size: 0.85em;
+  }
+
+  .summary-toast pre {
+    font-size: 0.8em;
+    max-height: 100px;
+  }
+}
+
+/* --- Custom Plus Button Style for Sticky Notes --- */
+.add-note-button {
+  background-color: #ffffff; /* White background */
+  border: 2px dashed #ccc; /* Dashed border */
+  border-radius: 8px; /* Match task-card radius */
+  color: #ccc;
+  font-size: 4em; /* Large plus sign */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px; /* Match min-height of task cards */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-note-button:hover {
+  background-color: #f5f5f5;
+  border-color: #aaa;
+  color: #aaa;
+}
